@@ -1,5 +1,7 @@
 package Main;
 
+import com.bank.operation.Operation;
+
 /**
  * Class to be attended by the bank
  * Has a turn and the operation given by the user

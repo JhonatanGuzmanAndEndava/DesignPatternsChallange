@@ -1,12 +1,12 @@
-package executor;
+package com.bank.dispatcher;
 
-import Agentes.BusyAgent;
-import Agentes.Cashier;
-import Agentes.Director;
-import Agentes.Supervisor;
-import ObjectPoolPattern.PoolCashier;
-import ObjectPoolPattern.PoolDirector;
-import ObjectPoolPattern.PoolSupervisor;
+import com.bank.agents.BusyAgent;
+import com.bank.agents.Cashier;
+import com.bank.agents.Director;
+import com.bank.agents.Supervisor;
+import com.bank.agents.PoolCashier;
+import com.bank.agents.PoolDirector;
+import com.bank.agents.PoolSupervisor;
 import Main.Client;
 
 import java.util.concurrent.CompletableFuture;
@@ -64,8 +64,6 @@ public class Dispatcher {
                 assignToSupervisor();
             } else if (pDirector.isAvailable()) {
                 assignToDirector();
-            } else {
-                waitforDisponibility(300);
             }
         }
         executor.shutdown();
@@ -102,6 +100,7 @@ public class Dispatcher {
         Supplier<BusyAgent> s1 = new SupplierOfAgents(UsingAgent);
         CompletableFuture.supplyAsync(s1, executor).thenAccept(usedAgent -> {
             pSupervisor.returnObjectToPool(UsingAgent);
+
             System.out.println("Took " + usedAgent.getTime() / 1000
                     + " seconds to attend the client with turn "
                     + usedAgent.getClientBeingAttended().getBankTurn()
@@ -124,16 +123,5 @@ public class Dispatcher {
         });
     }
 
-    /**
-     * Causes the current thread to suspend execution for a specified period
-     *
-     * @param time
-     */
-    private void waitforDisponibility(int time) {
-        try {
-            Thread.sleep(time);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
+
 }

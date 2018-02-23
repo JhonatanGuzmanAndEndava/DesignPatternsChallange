@@ -1,4 +1,4 @@
-package Main;
+package com.bank.operation;
 
 /**
  * Has the operation options of class Client

@@ -1,6 +1,4 @@
-package ObjectPoolPattern;
-
-import Agentes.Supervisor;
+package com.bank.agents;
 
 /**
  * Pool of supervisors

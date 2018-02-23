@@ -1,4 +1,4 @@
-package Agentes;
+package com.bank.agents;
 
 
 public class Supervisor extends Agent {

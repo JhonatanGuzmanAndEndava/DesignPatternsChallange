@@ -1,4 +1,4 @@
-package Agentes;
+package com.bank.agents;
 
 
 public class Cashier extends Agent {

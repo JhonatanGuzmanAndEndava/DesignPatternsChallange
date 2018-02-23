@@ -1,4 +1,4 @@
-package Agentes;
+package com.bank.agents;
 
 /**
  * Type of agents of the bank

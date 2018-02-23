@@ -1,6 +1,4 @@
-package ObjectPoolPattern;
-
-import Agentes.Cashier;
+package com.bank.agents;
 
 /**
  * Pool of cashiers

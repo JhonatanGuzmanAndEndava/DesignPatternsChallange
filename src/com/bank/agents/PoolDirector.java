@@ -1,6 +1,4 @@
-package ObjectPoolPattern;
-
-import Agentes.Director;
+package com.bank.agents;
 
 /**
  * Pool of directors
