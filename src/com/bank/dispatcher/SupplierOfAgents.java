@@ -1,7 +1,7 @@
 package com.bank.dispatcher;
 
 import Main.Client;
-import com.bank.agents.Agent;
+import com.bank.agents.factory.Agent;
 
 import java.util.function.Supplier;
 

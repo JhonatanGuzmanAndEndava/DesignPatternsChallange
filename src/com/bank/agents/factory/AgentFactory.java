@@ -1,4 +1,4 @@
-package com.bank.agents;
+package com.bank.agents.factory;
 
 public class AgentFactory {
     private static AgentFactory ourInstance = new AgentFactory();

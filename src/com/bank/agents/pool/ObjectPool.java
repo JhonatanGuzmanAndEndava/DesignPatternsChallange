@@ -1,4 +1,4 @@
-package com.bank.agents;
+package com.bank.agents.pool;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 

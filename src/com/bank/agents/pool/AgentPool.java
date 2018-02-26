@@ -1,4 +1,7 @@
-package com.bank.agents;
+package com.bank.agents.pool;
+
+import com.bank.agents.factory.Agent;
+import com.bank.agents.factory.AgentFactory;
 
 /**
  * Pool of cashiers

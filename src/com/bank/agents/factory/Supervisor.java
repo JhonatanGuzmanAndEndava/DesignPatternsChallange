@@ -1,4 +1,4 @@
-package com.bank.agents;
+package com.bank.agents.factory;
 
 import Main.Client;
 
