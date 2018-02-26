@@ -1,14 +1,8 @@
 package com.bank.dispatcher;
 
-import com.bank.agents.BusyAgent;
-import com.bank.agents.Cashier;
-import com.bank.agents.Director;
-import com.bank.agents.Supervisor;
-import com.bank.agents.PoolCashier;
-import com.bank.agents.PoolDirector;
-import com.bank.agents.PoolSupervisor;
+import com.bank.agents.factory.Agent;
+import com.bank.agents.pool.AgentPool;
 import Main.Client;
-
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
@@ -27,9 +21,9 @@ import java.util.function.Supplier;
 public class Dispatcher {
 
     private ExecutorService executor;
-    private PoolCashier pCashier;
-    private PoolDirector pDirector;
-    private PoolSupervisor pSupervisor;
+    private AgentPool pCashier;
+    private AgentPool pDirector;
+    private AgentPool pSupervisor;
     private ConcurrentLinkedQueue<Client> bankLine;
 
     private static Dispatcher instance;
@@ -40,9 +34,9 @@ public class Dispatcher {
      */
     private Dispatcher() {
         executor = Executors.newFixedThreadPool(10);
-        pCashier = new PoolCashier(6);
-        pDirector = new PoolDirector(1);
-        pSupervisor = new PoolSupervisor(3);
+        pCashier = new AgentPool(6, "CASHIER");
+        pDirector = new AgentPool(1, "DIRECTOR");
+        pSupervisor = new AgentPool(3, "SUPERVISOR");
     }
 
     public static Dispatcher getInstance() {
@@ -90,45 +84,44 @@ public class Dispatcher {
      * Displays a message whit the turn and the operation of the client, and with the id of the agent
      */
     private void assignToCashier() {
-        Cashier UsingAgent = pCashier.removeFromDispatcher();
-        UsingAgent.setClientBeingAttended(bankLine.remove());
-        Supplier<BusyAgent> s1 = new SupplierOfAgents(UsingAgent);
+        Agent agentInUse = pCashier.removeFromDispatcher();
+        Supplier<Agent> s1 = new SupplierOfAgents(agentInUse, bankLine.remove());
         CompletableFuture.supplyAsync(s1, executor).thenAccept(usedAgent -> {
-            pCashier.returnObjectToPool(UsingAgent);
-            System.out.println("Took " + usedAgent.getTime() / 1000
+            pCashier.returnObjectToPool(agentInUse);
+            /*System.out.println("Took " + usedAgent.getTime() / 1000
                     + " seconds to attend the client with turn "
                     + usedAgent.getClientBeingAttended().getBankTurn()
                     + " to perform " + usedAgent.getClientBeingAttended().getOperationClient()
                     + " with the agent " + usedAgent.getType() + " " + usedAgent.getId());
+                    */
         });
     }
 
     private void assignToSupervisor() {
-        Supervisor UsingAgent = pSupervisor.removeFromDispatcher();
-        UsingAgent.setClientBeingAttended(bankLine.remove());
-        Supplier<BusyAgent> s1 = new SupplierOfAgents(UsingAgent);
+        Agent agentInUse = pSupervisor.removeFromDispatcher();
+        Supplier<Agent> s1 = new SupplierOfAgents(agentInUse, bankLine.remove());
         CompletableFuture.supplyAsync(s1, executor).thenAccept(usedAgent -> {
-            pSupervisor.returnObjectToPool(UsingAgent);
-
-            System.out.println("Took " + usedAgent.getTime() / 1000
+            pSupervisor.returnObjectToPool(agentInUse);
+            /*System.out.println("Took " + usedAgent.getTime() / 1000
                     + " seconds to attend the client with turn "
                     + usedAgent.getClientBeingAttended().getBankTurn()
                     + " to perform " + usedAgent.getClientBeingAttended().getOperationClient()
                     + " with the agent " + usedAgent.getType() + " " + usedAgent.getId());
+                    */
         });
     }
 
     private void assignToDirector() {
-        Director UsingAgent = pDirector.removeFromDispatcher();
-        UsingAgent.setClientBeingAttended(bankLine.remove());
-        Supplier<BusyAgent> s1 = new SupplierOfAgents(UsingAgent);
+        Agent agentInUse = pDirector.removeFromDispatcher();
+        Supplier<Agent> s1 = new SupplierOfAgents(agentInUse, bankLine.remove());
         CompletableFuture.supplyAsync(s1, executor).thenAccept(usedAgent -> {
-            pDirector.returnObjectToPool(UsingAgent);
-            System.out.println("Took " + usedAgent.getTime() / 1000
+            pDirector.returnObjectToPool(agentInUse);
+            /*System.out.println("Took " + usedAgent.getTime() / 1000
                     + " seconds to attend the client with turn "
                     + usedAgent.getClientBeingAttended().getBankTurn()
                     + " to perform " + usedAgent.getClientBeingAttended().getOperationClient()
                     + " with the agent " + usedAgent.getType() + " " + usedAgent.getId());
+                    */
         });
     }
 
