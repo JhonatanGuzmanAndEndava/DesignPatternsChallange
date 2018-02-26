@@ -32,15 +32,24 @@ public class Dispatcher {
     private PoolSupervisor pSupervisor;
     private ConcurrentLinkedQueue<Client> bankLine;
 
+    private static Dispatcher instance;
+
     /**
      * Initialize the ThreadPool, the pool of cashiers, the pool of supervisors
      * and the pool of directors
      */
-    public Dispatcher() {
+    private Dispatcher() {
         executor = Executors.newFixedThreadPool(10);
         pCashier = new PoolCashier(6);
         pDirector = new PoolDirector(1);
         pSupervisor = new PoolSupervisor(3);
+    }
+
+    public static Dispatcher getInstance() {
+        if(instance == null) {
+            instance = new Dispatcher();
+        }
+        return instance;
     }
 
     /**

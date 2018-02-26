@@ -29,7 +29,7 @@ public class Main {
      */
     public static void main(String[] args) {
         bankLine = new ConcurrentLinkedQueue<>();
-        Dispatcher asesor = new Dispatcher();
+        Dispatcher asesor = Dispatcher.getInstance();
         int numberofClients;
 
         welcome();
