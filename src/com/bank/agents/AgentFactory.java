@@ -12,11 +12,11 @@ public class AgentFactory {
 
     public Agent getAgent(String agentType){
         if(agentType != null || !agentType.isEmpty()){
-            if(agentType.equalsIgnoreCase("Cashier"))
+            if(agentType.equalsIgnoreCase("CASHIER"))
                 return new Cashier();
-            else if(agentType.equalsIgnoreCase("Supervisor"))
+            else if(agentType.equalsIgnoreCase("SUPERVISOR"))
                 return new Supervisor();
-            else if(agentType.equalsIgnoreCase("Director"))
+            else if(agentType.equalsIgnoreCase("DIRECTOR"))
                 return new Director();
         }
         return null;

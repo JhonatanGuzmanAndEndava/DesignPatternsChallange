@@ -11,38 +11,36 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public abstract class ObjectPool<T> {
 
     private ConcurrentLinkedQueue<T> pool;
-    private int numOfObjectsInPool;
 
     /**
      * Constructor of the Pool, initialize the queue
-     * @param numofAgents
-     * @see #initialize(int)
+     * @param numOfAgents indicates the number of object that has to be created
+     * @param type indicates the type of agent that has to be created
+     * @see #initialize(int, String)
      */
-    public ObjectPool(int numofAgents) {
-        numOfObjectsInPool =0;
-        initialize(numofAgents);
+    public ObjectPool(int numOfAgents, String type) {
+        initialize(numOfAgents, type);
     }
 
     /**
      * Creates the objects of class <T> and add them to the queue
      * Objects are created in method createObject(int)
-     * @param numofAgents indicates the number of object that has to be created
-     * @see #createObject(int)
+     * @param numOfAgents indicates the number of object that has to be created
+     * @param type indicates the type of agent that has to be created
+     * @see #createObject(String)
      */
-    private void initialize(int numofAgents) {
-        pool = new ConcurrentLinkedQueue<T>();
-        for (int i = 0; i < numofAgents; i++) {
-            pool.add(createObject(numOfObjectsInPool));
-            numOfObjectsInPool++;
+    private void initialize(int numOfAgents, String type) {
+        pool = new ConcurrentLinkedQueue<>();
+        for (int i = 0; i < numOfAgents; i++) {
+            pool.add(createObject(type));
         }
     }
 
     /**
      * Creates an object, classes which extends from this class implements the method
-     * @param numdeObjectsinPool is the ID of the last object created
      * @return the object
      */
-    protected abstract T createObject(int numdeObjectsinPool);
+    protected abstract T createObject(String type);
 
     /**
      * Extracts an object from the queue
@@ -52,17 +50,15 @@ public abstract class ObjectPool<T> {
     public T removeFromDispatcher() {
         T object;
         object = pool.remove();
-        numOfObjectsInPool--;
         return object;
     }
 
     /**
-     *Returns the used objetc to the Pool
+     *Returns the used object to the Pool
      * @param object
      */
     public void returnObjectToPool(T object) {
         pool.add(object);
-        numOfObjectsInPool++;
     }
 
     /**
@@ -70,10 +66,7 @@ public abstract class ObjectPool<T> {
      * @return true if there is an object in the pool
      */
     public boolean isAvailable() {
-        if (numOfObjectsInPool == 0) {
-            return false;
-        }
-        return true;
+        return !pool.isEmpty();
     }
 
 }
