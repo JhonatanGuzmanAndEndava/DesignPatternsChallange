@@ -1,13 +1,29 @@
 package com.bank.agents;
 
+import Main.Client;
 
-public class Director extends Agent {
+import java.util.concurrent.atomic.AtomicInteger;
 
-    /**
-     * Constructor method
-     * @param id, id of the agent Director
-     */
-    public Director(int id) {
-        super(TypeOfAgent.Director, id);
+public class Director implements Agent {
+    private static final AtomicInteger directorIdCount = new AtomicInteger(0);
+    private final int directorId;
+
+    public Director(){
+        directorId = directorIdCount.incrementAndGet();
+    }
+
+    @Override
+    public String getJobName() {
+        return "Director";
+    }
+
+    @Override
+    public int getAgentId() {
+        return directorId;
+    }
+
+    @Override
+    public String attend(Client client) {
+        return this.getJobName()+" "+this.getAgentId()+" has attended "+client.toString();
     }
 }
