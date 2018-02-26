@@ -20,10 +20,15 @@ import java.util.function.Supplier;
  */
 public class Dispatcher {
 
+    private final int CASHIERS = 6;
+    private final int SUPERVISOR = 3;
+    private final int DIRECTOR = 1;
+
     private ExecutorService executor;
     private AgentPool pCashier;
     private AgentPool pDirector;
     private AgentPool pSupervisor;
+    private BankFile bankFile;
 
     private static Dispatcher instance;
 
@@ -33,9 +38,9 @@ public class Dispatcher {
      */
     private Dispatcher() {
         executor = Executors.newFixedThreadPool(10);
-        pCashier = new AgentPool(6, "CASHIER");
-        pDirector = new AgentPool(1, "DIRECTOR");
-        pSupervisor = new AgentPool(3, "SUPERVISOR");
+        pCashier = new AgentPool(CASHIERS, "CASHIER");
+        pSupervisor = new AgentPool(SUPERVISOR, "SUPERVISOR");
+        pDirector = new AgentPool(DIRECTOR, "DIRECTOR");
     }
 
     public static Dispatcher getInstance() {
@@ -71,6 +76,10 @@ public class Dispatcher {
         Supplier<Agent> s1 = new SupplierOfAgents(agentInUse, client);
         CompletableFuture.supplyAsync(s1, executor).thenAccept(usedAgent -> {
             pCashier.returnObjectToPool(usedAgent);
+            bankFile.attendClient();
+            System.out.println("Atendido por un cajero, agregando uno mas");
+            tryToShutdown();
+
             /*System.out.println("Took " + usedAgent.getTime() / 1000
                     + " seconds to attend the client with turn "
                     + usedAgent.getClientBeingAttended().getBankTurn()
@@ -85,6 +94,9 @@ public class Dispatcher {
         Supplier<Agent> s1 = new SupplierOfAgents(agentInUse, client);
         CompletableFuture.supplyAsync(s1, executor).thenAccept(usedAgent -> {
             pSupervisor.returnObjectToPool(usedAgent);
+            bankFile.attendClient();
+            System.out.println("Atendido por un supervisor, agregando uno mas");
+            tryToShutdown();
             /*System.out.println("Took " + usedAgent.getTime() / 1000
                     + " seconds to attend the client with turn "
                     + usedAgent.getClientBeingAttended().getBankTurn()
@@ -99,6 +111,10 @@ public class Dispatcher {
         Supplier<Agent> s1 = new SupplierOfAgents(agentInUse, client);
         CompletableFuture.supplyAsync(s1, executor).thenAccept(usedAgent -> {
             pDirector.returnObjectToPool(usedAgent);
+            bankFile.attendClient();
+            System.out.println("Atendido por un director, agregando uno mas");
+            tryToShutdown();
+
             /*System.out.println("Took " + usedAgent.getTime() / 1000
                     + " seconds to attend the client with turn "
                     + usedAgent.getClientBeingAttended().getBankTurn()
@@ -108,8 +124,17 @@ public class Dispatcher {
         });
     }
 
-    public void close() {
-        executor.shutdown();
+    public void setBankFile(BankFile bankFile) {
+        this.bankFile = bankFile;
+    }
+
+    public void startToAttend() {
+        bankFile.attendFirstClients(CASHIERS + SUPERVISOR + DIRECTOR);
+    }
+
+    public void tryToShutdown() {
+        if(bankFile.isClientInQueue())
+            executor.shutdown();
     }
 
 

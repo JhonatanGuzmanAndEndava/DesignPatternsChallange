@@ -41,8 +41,9 @@ public class Main {
         createLineofClients(numberofClients);
 
         bankFile.addObserver(new AttendObserver(bankFile));
-        bankFile.attendClient();
-        asesor.close();
+
+        asesor.setBankFile(bankFile);
+        asesor.startToAttend();
     }
 
     /**
