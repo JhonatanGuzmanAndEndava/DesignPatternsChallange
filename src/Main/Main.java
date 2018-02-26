@@ -1,5 +1,7 @@
 package Main;
 
+import com.bank.dispatcher.AttendObserver;
+import com.bank.dispatcher.BankFile;
 import com.bank.dispatcher.Dispatcher;
 import com.bank.operation.Operation;
 
@@ -15,7 +17,7 @@ import static Main.Messages.*;
  */
 public class Main {
 
-    private static ConcurrentLinkedQueue<Client> bankLine;
+    private static BankFile bankFile;
 
     /**
      * This method sends a dialogue box with a welcome message.
@@ -28,7 +30,7 @@ public class Main {
      * @see #createLineofClients(int)
      */
     public static void main(String[] args) {
-        bankLine = new ConcurrentLinkedQueue<>();
+        bankFile = new BankFile();
         Dispatcher asesor = Dispatcher.getInstance();
         int numberofClients;
 
@@ -38,7 +40,9 @@ public class Main {
 
         createLineofClients(numberofClients);
 
-        asesor.attend(bankLine);
+        bankFile.addObserver(new AttendObserver(bankFile));
+        bankFile.attendClient();
+        asesor.close();
     }
 
     /**
@@ -74,7 +78,7 @@ public class Main {
     private static void createLineofClients(int numberOfClients) {
         int clientsInLine = 0;
         for (int i = 0; i < numberOfClients; i++) {
-            bankLine.add((createClient(clientsInLine)));
+            bankFile.addClient((createClient(clientsInLine)));
             clientsInLine++;
         }
     }

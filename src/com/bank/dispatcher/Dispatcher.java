@@ -24,7 +24,6 @@ public class Dispatcher {
     private AgentPool pCashier;
     private AgentPool pDirector;
     private AgentPool pSupervisor;
-    private ConcurrentLinkedQueue<Client> bankLine;
 
     private static Dispatcher instance;
 
@@ -46,30 +45,14 @@ public class Dispatcher {
         return instance;
     }
 
-    /**
-     * For each client, asks for availability of the agents, if there isn't an agent available waits
-     * If there is an agent, assigns the client to the agent
-     * With a thread, the agent perform the request of the client
-     * When all the clients are attended, shuts down the ExecutorService
-     *
-     * @param bankLine is the queue which contains the clients to be attended
-     * @see #assignToCashier()
-     * @see #assignToDirector()
-     * @see #assignToSupervisor()
-     */
-    public void attend(ConcurrentLinkedQueue<Client> bankLine) {
-        this.bankLine = bankLine;
-
-        while (!bankLine.isEmpty()) {
-            if (pCashier.isAvailable()) {
-                assignToCashier();
-            } else if (pSupervisor.isAvailable()) {
-                assignToSupervisor();
-            } else if (pDirector.isAvailable()) {
-                assignToDirector();
-            }
+    public void attend(Client client) {
+        if (pCashier.isAvailable()) {
+            assignToCashier(client);
+        } else if (pSupervisor.isAvailable()) {
+            assignToSupervisor(client);
+        } else if (pDirector.isAvailable()) {
+            assignToDirector(client);
         }
-        executor.shutdown();
     }
 
     /**
@@ -83,11 +66,11 @@ public class Dispatcher {
      * The promise is the agent who attended the client.
      * Displays a message whit the turn and the operation of the client, and with the id of the agent
      */
-    private void assignToCashier() {
+    private void assignToCashier(Client client) {
         Agent agentInUse = pCashier.removeFromDispatcher();
-        Supplier<Agent> s1 = new SupplierOfAgents(agentInUse, bankLine.remove());
+        Supplier<Agent> s1 = new SupplierOfAgents(agentInUse, client);
         CompletableFuture.supplyAsync(s1, executor).thenAccept(usedAgent -> {
-            pCashier.returnObjectToPool(agentInUse);
+            pCashier.returnObjectToPool(usedAgent);
             /*System.out.println("Took " + usedAgent.getTime() / 1000
                     + " seconds to attend the client with turn "
                     + usedAgent.getClientBeingAttended().getBankTurn()
@@ -97,11 +80,11 @@ public class Dispatcher {
         });
     }
 
-    private void assignToSupervisor() {
+    private void assignToSupervisor(Client client) {
         Agent agentInUse = pSupervisor.removeFromDispatcher();
-        Supplier<Agent> s1 = new SupplierOfAgents(agentInUse, bankLine.remove());
+        Supplier<Agent> s1 = new SupplierOfAgents(agentInUse, client);
         CompletableFuture.supplyAsync(s1, executor).thenAccept(usedAgent -> {
-            pSupervisor.returnObjectToPool(agentInUse);
+            pSupervisor.returnObjectToPool(usedAgent);
             /*System.out.println("Took " + usedAgent.getTime() / 1000
                     + " seconds to attend the client with turn "
                     + usedAgent.getClientBeingAttended().getBankTurn()
@@ -111,11 +94,11 @@ public class Dispatcher {
         });
     }
 
-    private void assignToDirector() {
+    private void assignToDirector(Client client) {
         Agent agentInUse = pDirector.removeFromDispatcher();
-        Supplier<Agent> s1 = new SupplierOfAgents(agentInUse, bankLine.remove());
+        Supplier<Agent> s1 = new SupplierOfAgents(agentInUse, client);
         CompletableFuture.supplyAsync(s1, executor).thenAccept(usedAgent -> {
-            pDirector.returnObjectToPool(agentInUse);
+            pDirector.returnObjectToPool(usedAgent);
             /*System.out.println("Took " + usedAgent.getTime() / 1000
                     + " seconds to attend the client with turn "
                     + usedAgent.getClientBeingAttended().getBankTurn()
@@ -123,6 +106,10 @@ public class Dispatcher {
                     + " with the agent " + usedAgent.getType() + " " + usedAgent.getId());
                     */
         });
+    }
+
+    public void close() {
+        executor.shutdown();
     }
 
 
