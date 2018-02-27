@@ -4,7 +4,6 @@ import com.bank.agents.factory.Agent;
 import com.bank.agents.pool.AgentPool;
 import Main.Client;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Supplier;
@@ -73,47 +72,26 @@ public class Dispatcher {
      */
     private void assignToCashier(Client client) {
         Agent agentInUse = pCashier.removeFromDispatcher();
-        Supplier<Agent> s1 = new SupplierOfAgents(agentInUse, client);
-        CompletableFuture.supplyAsync(s1, executor).thenAccept(usedAgent -> {
-            pCashier.returnObjectToPool(usedAgent);
-            bankFile.attendClient();
-            System.out.println("Atendido por un cajero, agregando uno mas");
-            tryToShutdown();
-
-            /*System.out.println("Took " + usedAgent.getTime() / 1000
-                    + " seconds to attend the client with turn "
-                    + usedAgent.getClientBeingAttended().getBankTurn()
-                    + " to perform " + usedAgent.getClientBeingAttended().getOperationClient()
-                    + " with the agent " + usedAgent.getType() + " " + usedAgent.getId());
-                    */
-        });
+        assign(agentInUse, client);
     }
 
     private void assignToSupervisor(Client client) {
         Agent agentInUse = pSupervisor.removeFromDispatcher();
-        Supplier<Agent> s1 = new SupplierOfAgents(agentInUse, client);
-        CompletableFuture.supplyAsync(s1, executor).thenAccept(usedAgent -> {
-            pSupervisor.returnObjectToPool(usedAgent);
-            bankFile.attendClient();
-            System.out.println("Atendido por un supervisor, agregando uno mas");
-            tryToShutdown();
-            /*System.out.println("Took " + usedAgent.getTime() / 1000
-                    + " seconds to attend the client with turn "
-                    + usedAgent.getClientBeingAttended().getBankTurn()
-                    + " to perform " + usedAgent.getClientBeingAttended().getOperationClient()
-                    + " with the agent " + usedAgent.getType() + " " + usedAgent.getId());
-                    */
-        });
+        assign(agentInUse, client);
     }
 
     private void assignToDirector(Client client) {
         Agent agentInUse = pDirector.removeFromDispatcher();
+        assign(agentInUse, client);
+    }
+
+    private void assign(Agent agentInUse, Client client) {
         Supplier<Agent> s1 = new SupplierOfAgents(agentInUse, client);
         CompletableFuture.supplyAsync(s1, executor).thenAccept(usedAgent -> {
             pDirector.returnObjectToPool(usedAgent);
-            bankFile.attendClient();
-            System.out.println("Atendido por un director, agregando uno mas");
-            tryToShutdown();
+            String s = usedAgent.getJobName()+" "+usedAgent.getAgentId()+" has attended " + client.toString();
+            System.out.println(s);
+            attendAnotherClient();
 
             /*System.out.println("Took " + usedAgent.getTime() / 1000
                     + " seconds to attend the client with turn "
@@ -129,12 +107,19 @@ public class Dispatcher {
     }
 
     public void startToAttend() {
-        bankFile.attendFirstClients(CASHIERS + SUPERVISOR + DIRECTOR);
+        if(bankFile.getNumberOfClients() < CASHIERS + SUPERVISOR + DIRECTOR)
+            bankFile.attendFirstClients(bankFile.getNumberOfClients());
+        else
+            bankFile.attendFirstClients(CASHIERS + SUPERVISOR + DIRECTOR);
     }
 
-    public void tryToShutdown() {
-        if(bankFile.isClientInQueue())
+    public void attendAnotherClient() {
+        if(bankFile.isClientInQueue()) {
             executor.shutdown();
+        }
+        else {
+            bankFile.attendClient();
+        }
     }
 
 

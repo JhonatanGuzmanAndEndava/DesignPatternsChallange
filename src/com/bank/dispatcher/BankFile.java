@@ -37,6 +37,10 @@ public class BankFile {
         return bankFile.remove();
     }
 
+    public int getNumberOfClients() {
+        return bankFile.size();
+    }
+
     public boolean isClientInQueue() {
         return bankFile.isEmpty();
     }
@@ -44,13 +48,11 @@ public class BankFile {
     public void attendFirstClients(int numberOfClients) {
         for (int i = 0; i<numberOfClients; ++i) {
             notifyAllObservers();
-            System.out.println("Clientes en cola: " + bankFile.size());
         }
     }
 
     public void attendClient() {
         notifyAllObservers();
-        System.out.println("Clientes en cola: " + bankFile.size());
     }
 
     public void notifyAllObservers() {

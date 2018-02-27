@@ -31,4 +31,9 @@ public class Client {
     public Operation getOperationClient() {
         return operationClient;
     }
+
+    @Override
+    public String toString() {
+        return "Client " + bankTurn;
+    }
 }

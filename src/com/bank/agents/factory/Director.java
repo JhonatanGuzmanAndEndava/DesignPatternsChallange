@@ -24,6 +24,6 @@ public class Director implements Agent {
 
     @Override
     public String attend(Client client) {
-        return this.getJobName()+" "+this.getAgentId()+" has attended "+client.toString();
+        return this.getJobName()+" "+this.getAgentId()+" is attending "+client.toString();
     }
 }
