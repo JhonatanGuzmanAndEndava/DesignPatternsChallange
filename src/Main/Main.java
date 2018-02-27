@@ -1,7 +1,7 @@
 package Main;
 
+import com.bank.client.Client;
 import com.bank.dispatcher.Dispatcher;
-import com.bank.operation.Operation;
 
 import javax.swing.*;
 import java.util.concurrent.ConcurrentLinkedQueue;

@@ -1,6 +1,4 @@
-package Main;
-
-import com.bank.operation.Operation;
+package com.bank.client;
 
 /**
  * Class to be attended by the bank

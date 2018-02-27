@@ -1,6 +1,6 @@
 package com.bank.agents.factory;
 
-import Main.Client;
+import com.bank.client.Client;
 
 public interface Agent {
 

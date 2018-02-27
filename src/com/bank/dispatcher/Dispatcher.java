@@ -2,7 +2,7 @@ package com.bank.dispatcher;
 
 import com.bank.agents.factory.Agent;
 import com.bank.agents.pool.AgentPool;
-import Main.Client;
+import com.bank.client.Client;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
