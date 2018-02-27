@@ -8,6 +8,11 @@ public class Withdrawal extends BankOperation {
     @Override
     protected void operationProcess() {
         // Do transaction specific code
+        try {
+            Thread.sleep(this.getOperationDuration());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

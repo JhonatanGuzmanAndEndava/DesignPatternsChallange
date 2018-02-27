@@ -31,16 +31,8 @@ public class SupplierOfAgents implements Supplier<Agent> {
      * Assigns to the Agent the attention time
      */
     public Agent get() {
-        try {
-            System.out.println(busyAgent.attend(client));
-            long tiempo = ((int) Math.floor(Math.random() * (6) + 10)) * 1000;
-            Thread.sleep(tiempo);
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }finally {
-            return busyAgent;
-        }
+        System.out.println(busyAgent.attend(client));
+        return busyAgent;
     }
 
 }

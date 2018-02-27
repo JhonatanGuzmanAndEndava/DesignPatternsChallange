@@ -24,6 +24,7 @@ public class Cashier implements Agent {
 
     @Override
     public String attend(Client client) {
-        return this.getJobName()+" "+this.getAgentId()+" has attended "+client.toString();
+        String operationMessage = client.getOperation().performOperation();
+        return this.getJobName()+" "+this.getAgentId()+" has attended "+client.toString() + ": "+operationMessage;
     }
 }

@@ -82,7 +82,7 @@ public class Dispatcher {
             /*System.out.println("Took " + usedAgent.getTime() / 1000
                     + " seconds to attend the client with turn "
                     + usedAgent.getClientBeingAttended().getBankTurn()
-                    + " to perform " + usedAgent.getClientBeingAttended().getOperationClient()
+                    + " to perform " + usedAgent.getClientBeingAttended().getOperation()
                     + " with the agent " + usedAgent.getType() + " " + usedAgent.getId());
                     */
         });
@@ -96,7 +96,7 @@ public class Dispatcher {
             /*System.out.println("Took " + usedAgent.getTime() / 1000
                     + " seconds to attend the client with turn "
                     + usedAgent.getClientBeingAttended().getBankTurn()
-                    + " to perform " + usedAgent.getClientBeingAttended().getOperationClient()
+                    + " to perform " + usedAgent.getClientBeingAttended().getOperation()
                     + " with the agent " + usedAgent.getType() + " " + usedAgent.getId());
                     */
         });
@@ -110,7 +110,7 @@ public class Dispatcher {
             /*System.out.println("Took " + usedAgent.getTime() / 1000
                     + " seconds to attend the client with turn "
                     + usedAgent.getClientBeingAttended().getBankTurn()
-                    + " to perform " + usedAgent.getClientBeingAttended().getOperationClient()
+                    + " to perform " + usedAgent.getClientBeingAttended().getOperation()
                     + " with the agent " + usedAgent.getType() + " " + usedAgent.getId());
                     */
         });

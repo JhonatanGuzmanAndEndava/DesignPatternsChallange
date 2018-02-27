@@ -1,19 +1,21 @@
 package com.bank.client;
 
+import com.bank.operation.BankOperation;
+
 /**
  * Class to be attended by the bank
  * Has a turn and the operation given by the user
  */
 public class Client {
     int bankTurn;
-    Operation operationClient;
+    BankOperation operation;
 
     /**
      * Constructor method of the client
      */
-    public Client(int bankTurn, Operation operationClient) {
+    public Client(int bankTurn, BankOperation operation) {
         this.bankTurn = ++bankTurn;
-        this.operationClient = operationClient;
+        this.operation = operation;
     }
 
     /**
@@ -26,7 +28,7 @@ public class Client {
     /**
      * Returns the Operation performed by the client
      */
-    public Operation getOperationClient() {
-        return operationClient;
+    public BankOperation getOperation() {
+        return operation;
     }
 }
