@@ -1,7 +1,7 @@
 package com.bank.operation;
 
 public abstract class BankOperation {
-    public final void performOperation{
+    public final void performOperation(){
         operationProcess();
         operationMessage();
     }
