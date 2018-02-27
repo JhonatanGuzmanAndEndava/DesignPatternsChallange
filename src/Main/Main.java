@@ -4,6 +4,8 @@ import com.bank.dispatcher.AttendObserver;
 import com.bank.dispatcher.BankFile;
 import com.bank.dispatcher.Dispatcher;
 import com.bank.operation.Operation;
+import com.messages.ServiceMsg;
+import com.observer.*;
 
 import javax.swing.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -30,6 +32,9 @@ public class Main {
      * @see #createLineofClients(int)
      */
     public static void main(String[] args) {
+
+        subscribe();
+
         bankFile = new BankFile();
         Dispatcher asesor = Dispatcher.getInstance();
         int numberofClients;
@@ -67,6 +72,17 @@ public class Main {
             System.exit(0);
         }
         return 0;
+    }
+
+    public static void subscribe(){
+        Observer auditModule = new AuditModule();
+        Observer marketingSystem = new MarketingSystem(new MktSystemAd());
+        Subject distributor = new Distributor();
+
+        distributor.registerObserver(auditModule);
+        distributor.registerObserver(marketingSystem);
+
+        ServiceMsg.setDistributorMessage(distributor);
     }
 
     /**

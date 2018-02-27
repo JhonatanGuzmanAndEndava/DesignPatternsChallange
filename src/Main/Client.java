@@ -9,6 +9,8 @@ import com.bank.operation.Operation;
 public class Client {
     int bankTurn;
     Operation operationClient;
+    String email;
+    int accountID;
 
     /**
      * Constructor method of the client
@@ -23,6 +25,14 @@ public class Client {
      */
     public int getBankTurn() {
         return bankTurn;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public int getAccountID() {
+        return accountID;
     }
 
     /**

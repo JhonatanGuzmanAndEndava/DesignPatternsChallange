@@ -3,6 +3,10 @@ package com.bank.dispatcher;
 import com.bank.agents.factory.Agent;
 import com.bank.agents.pool.AgentPool;
 import Main.Client;
+import com.messages.Message;
+import com.messages.ServiceMsg;
+import com.messages.TransactionMessage;
+
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -72,35 +76,43 @@ public class Dispatcher {
      */
     private void assignToCashier(Client client) {
         Agent agentInUse = pCashier.removeFromDispatcher();
-        assign(agentInUse, client);
+        Supplier<Agent> s1 = new SupplierOfAgents(agentInUse, client);
+        CompletableFuture.supplyAsync(s1, executor).thenAccept(usedAgent -> {
+            String s = usedAgent.getJobName()+" "+usedAgent.getAgentId()+" has attended " + client.toString();
+            System.out.println(s);
+            Message transactionMessage = new TransactionMessage(client.getBankTurn(),client.getEmail(),usedAgent.getAgentId(),usedAgent.getJobName(),client.getAccountID(),"Transaction date",10000,client.getOperationClient());
+            ServiceMsg.sendMessagetransaction(transactionMessage);
+            pCashier.returnObjectToPool(usedAgent);
+            attendAnotherClient();
+        });
     }
 
     private void assignToSupervisor(Client client) {
         Agent agentInUse = pSupervisor.removeFromDispatcher();
-        assign(agentInUse, client);
+        Supplier<Agent> s1 = new SupplierOfAgents(agentInUse, client);
+        CompletableFuture.supplyAsync(s1, executor).thenAccept(usedAgent -> {
+            String s = usedAgent.getJobName()+" "+usedAgent.getAgentId()+" has attended " + client.toString();
+            System.out.println(s);
+            Message transactionMessage = new TransactionMessage(client.getBankTurn(),client.getEmail(),usedAgent.getAgentId(),usedAgent.getJobName(),client.getAccountID(),"Transaction date",10000,client.getOperationClient());
+            ServiceMsg.sendMessagetransaction(transactionMessage);
+            attendAnotherClient();
+            pSupervisor.returnObjectToPool(usedAgent);
+        });
     }
 
     private void assignToDirector(Client client) {
         Agent agentInUse = pDirector.removeFromDispatcher();
-        assign(agentInUse, client);
-    }
-
-    private void assign(Agent agentInUse, Client client) {
         Supplier<Agent> s1 = new SupplierOfAgents(agentInUse, client);
         CompletableFuture.supplyAsync(s1, executor).thenAccept(usedAgent -> {
-            pDirector.returnObjectToPool(usedAgent);
             String s = usedAgent.getJobName()+" "+usedAgent.getAgentId()+" has attended " + client.toString();
             System.out.println(s);
+            Message transactionMessage = new TransactionMessage(client.getBankTurn(),client.getEmail(),usedAgent.getAgentId(),usedAgent.getJobName(),client.getAccountID(),"Transaction date",10000,client.getOperationClient());
+            ServiceMsg.sendMessagetransaction(transactionMessage);
             attendAnotherClient();
-
-            /*System.out.println("Took " + usedAgent.getTime() / 1000
-                    + " seconds to attend the client with turn "
-                    + usedAgent.getClientBeingAttended().getBankTurn()
-                    + " to perform " + usedAgent.getClientBeingAttended().getOperationClient()
-                    + " with the agent " + usedAgent.getType() + " " + usedAgent.getId());
-                    */
+            pDirector.returnObjectToPool(usedAgent);
         });
     }
+
 
     public void setBankFile(BankFile bankFile) {
         this.bankFile = bankFile;
