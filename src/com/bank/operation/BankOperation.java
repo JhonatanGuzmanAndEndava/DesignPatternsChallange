@@ -16,6 +16,10 @@ public abstract class BankOperation {
         return operationMessage();
     }
 
+    public final String type(){
+        return this.getOperationType();
+    }
+
     protected final String operationMessage(){
         return "Performed a "+this.getOperationType()+" with value "+this.getOperationValue()+" on "+this.getOperationDate();
     }
