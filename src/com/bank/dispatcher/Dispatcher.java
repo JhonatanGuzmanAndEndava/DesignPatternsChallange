@@ -63,56 +63,32 @@ public class Dispatcher {
         }
     }
 
-    /**
-     * Attends the client with the available agent
-     *
-     * Extracts an agent from the Pool
-     * Extracts a client from the queue
-     * Assigns the client to the agent
-     * Creates a supply to the ThreadPool
-     * Creates a CompletableFuture, when the tread perform its action returns a promise.
-     * The promise is the agent who attended the client.
-     * Displays a message whit the turn and the operation of the client, and with the id of the agent
-     */
     private void assignToCashier(Client client) {
         Agent agentInUse = pCashier.removeFromDispatcher();
-        Supplier<Agent> s1 = new SupplierOfAgents(agentInUse, client);
-        CompletableFuture.supplyAsync(s1, executor).thenAccept(usedAgent -> {
-            String s = usedAgent.getJobName()+" "+usedAgent.getAgentId()+" has attended " + client.toString();
-            System.out.println(s);
-            Message transactionMessage = new TransactionMessage(client.getBankTurn(),client.getEmail(),usedAgent.getAgentId(),usedAgent.getJobName(),client.getAccountID(),"Transaction date",10000,client.getOperationClient());
-            ServiceMsg.sendMessagetransaction(transactionMessage);
-            pCashier.returnObjectToPool(usedAgent);
-            attendAnotherClient();
-        });
+        assign(agentInUse, client,pCashier);
     }
 
     private void assignToSupervisor(Client client) {
         Agent agentInUse = pSupervisor.removeFromDispatcher();
-        Supplier<Agent> s1 = new SupplierOfAgents(agentInUse, client);
-        CompletableFuture.supplyAsync(s1, executor).thenAccept(usedAgent -> {
-            String s = usedAgent.getJobName()+" "+usedAgent.getAgentId()+" has attended " + client.toString();
-            System.out.println(s);
-            Message transactionMessage = new TransactionMessage(client.getBankTurn(),client.getEmail(),usedAgent.getAgentId(),usedAgent.getJobName(),client.getAccountID(),"Transaction date",10000,client.getOperationClient());
-            ServiceMsg.sendMessagetransaction(transactionMessage);
-            attendAnotherClient();
-            pSupervisor.returnObjectToPool(usedAgent);
-        });
+        assign(agentInUse, client,pSupervisor);
     }
 
     private void assignToDirector(Client client) {
         Agent agentInUse = pDirector.removeFromDispatcher();
-        Supplier<Agent> s1 = new SupplierOfAgents(agentInUse, client);
-        CompletableFuture.supplyAsync(s1, executor).thenAccept(usedAgent -> {
-            String s = usedAgent.getJobName()+" "+usedAgent.getAgentId()+" has attended " + client.toString();
-            System.out.println(s);
-            Message transactionMessage = new TransactionMessage(client.getBankTurn(),client.getEmail(),usedAgent.getAgentId(),usedAgent.getJobName(),client.getAccountID(),"Transaction date",10000,client.getOperationClient());
-            ServiceMsg.sendMessagetransaction(transactionMessage);
-            attendAnotherClient();
-            pDirector.returnObjectToPool(usedAgent);
-        });
+        assign(agentInUse, client,pDirector);
     }
 
+    private void assign(Agent agentInUse,Client client,AgentPool pAgent) {
+        Supplier<Agent> s1 = new SupplierOfAgents(agentInUse, client);
+        CompletableFuture.supplyAsync(s1, executor).thenAccept(usedAgent -> {
+            //String s = usedAgent.getJobName()+" "+usedAgent.getAgentId()+" has attended " + client.toString();
+            //System.out.println(s);
+            Message transactionMessage = new TransactionMessage(client.getBankTurn(),client.getEmail(),usedAgent.getAgentId(),usedAgent.getJobName(),client.getAccountID(),"Transaction date",10000,client.getOperationClient());
+            ServiceMsg.sendMessagetransaction(transactionMessage);
+            pAgent.returnObjectToPool(usedAgent);
+            attendAnotherClient();
+        });
+    }
 
     public void setBankFile(BankFile bankFile) {
         this.bankFile = bankFile;
@@ -133,6 +109,4 @@ public class Dispatcher {
             bankFile.attendClient();
         }
     }
-
-
 }
