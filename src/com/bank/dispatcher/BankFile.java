@@ -1,6 +1,6 @@
 package com.bank.dispatcher;
 
-import Main.Client;
+import com.bank.client.Client;
 
 import java.util.ArrayList;
 import java.util.List;

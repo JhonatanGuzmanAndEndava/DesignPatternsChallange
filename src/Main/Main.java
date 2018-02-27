@@ -1,19 +1,17 @@
 package Main;
 
-<<<<<<< HEAD
 import com.bank.client.Client;
 import com.bank.dispatcher.Dispatcher;
-=======
 import com.bank.dispatcher.AttendObserver;
 import com.bank.dispatcher.BankFile;
-import com.bank.dispatcher.Dispatcher;
-import com.bank.operation.Operation;
+import com.bank.operation.BankOperation;
+import com.bank.operation.CustomerIssue;
+import com.bank.operation.Deposit;
+import com.bank.operation.Withdrawal;
 import com.messages.ServiceMsg;
 import com.observer.*;
->>>>>>> 77b6987ec747b7d2fab59dc4140931ef909e45fd
 
 import javax.swing.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static Main.WelcomeToClient.welcome;
 import static Main.Messages.*;
@@ -114,7 +112,7 @@ public class Main {
      * @see #readOperation(int)
      */
     private static Client createClient(int antTurn) {
-        Operation operationClient = readOperation(antTurn);
+        BankOperation operationClient = readOperation(antTurn);
         return new Client(antTurn, operationClient);
     }
 
@@ -125,21 +123,21 @@ public class Main {
      * @param turn is the turn of the client which is going to perform the operation
      * @return the operation of the client of turn turn
      */
-    private static Operation readOperation(int turn) {
+    private static BankOperation readOperation(int turn) {
         turn++;
-        Operation[] options = {Operation.Deposits, Operation.Withdrawals, Operation.Resolving_customer_issues};
-        int seleccion = JOptionPane.showOptionDialog(null, readOpClient + turn, "Operation", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-        switch (seleccion) {
+        String[] options = {"Deposits", "Withdrawals", "Resolving customer issues"};
+        int selection = JOptionPane.showOptionDialog(null, readOpClient + turn, "Operation", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+        switch (selection) {
             case 0:
-                return Operation.Deposits;
+                return new Deposit(1234);
             case 1:
-                return Operation.Withdrawals;
+                return new Withdrawal(-1234);
             case 2:
-                return Operation.Resolving_customer_issues;
+                return new CustomerIssue(0);
             case -1:
                 System.exit(0);
         }
-        return Operation.invalid;
+        return null;
     }
 
 
