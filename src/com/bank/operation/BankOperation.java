@@ -1,6 +1,7 @@
 package com.bank.operation;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class BankOperation {
     protected final LocalDateTime operationDate;
@@ -10,7 +11,7 @@ public abstract class BankOperation {
     public BankOperation(int operationValue) {
         this.operationDate = LocalDateTime.now();
         this.operationValue = operationValue;
-        this.operationDuration = ((int) Math.floor(Math.random() * (6) + 10)) * 1000;
+        this.operationDuration = ThreadLocalRandom.current().nextInt(10000,15000);
     }
 
     public final String performOperation(){
