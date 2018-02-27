@@ -10,6 +10,5 @@ public class AttendObserver extends BankListObserver {
     public synchronized void update() {
         Dispatcher dispatcher = Dispatcher.getInstance();
         dispatcher.attend(bankFile.removeClient());
-        //bankFile.attendClient();
     }
 }

@@ -28,7 +28,7 @@ public abstract class BankOperation {
 
     protected final String operationMessage(){
         return "Performed a "+this.getOperationType()+" with value "+this.getOperationValue()+" on "+this.getOperationDate()
-                + "took: " + this.getOperationDuration()/1000 + "s";
+                + " took: " + this.getOperationDuration()/1000 + "s";
     }
 
     protected final LocalDateTime getOperationDate() {

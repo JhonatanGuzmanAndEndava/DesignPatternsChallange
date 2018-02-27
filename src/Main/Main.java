@@ -32,7 +32,7 @@ public class Main {
      *
      * @see WelcomeToClient#welcome()
      * @see #readNumberOfClients()
-     * @see #createLineofClients(int)
+     * @see #createLineOfClients(int)
      */
     public static void main(String[] args) {
 
@@ -40,13 +40,13 @@ public class Main {
 
         bankFile = new BankFile();
         Dispatcher asesor = Dispatcher.getInstance();
-        int numberofClients;
+        int numberOfClients;
 
         welcome();
 
-        numberofClients = readNumberOfClients();
+        numberOfClients = readNumberOfClients();
 
-        createLineofClients(numberofClients);
+        createLineOfClients(numberOfClients);
 
         bankFile.addObserver(new AttendObserver(bankFile));
 
@@ -95,7 +95,7 @@ public class Main {
      * @param numberOfClients indicates the number of clients to be created
      * @see #createClient(int)
      */
-    private static void createLineofClients(int numberOfClients) {
+    private static void createLineOfClients(int numberOfClients) {
         int clientsInLine = 0;
         for (int i = 0; i < numberOfClients; i++) {
             bankFile.addClient((createClient(clientsInLine)));

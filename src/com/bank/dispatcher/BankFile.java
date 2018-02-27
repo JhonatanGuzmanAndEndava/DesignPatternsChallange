@@ -11,8 +11,6 @@ public class BankFile {
     private ConcurrentLinkedQueue<Client> bankFile;
     private List<BankListObserver> bankListObserver = new ArrayList<>();
 
-    private int count = 0;
-
     public BankFile() {
         this.bankFile = new ConcurrentLinkedQueue<>();
     }

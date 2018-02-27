@@ -10,7 +10,7 @@ public class ServiceMsg {
         distributorMessage = distributorMessageSubj;
     }
 
-    public static synchronized void sendMessagetransaction(Message transaction) {
+    public static synchronized void sendMessageTransaction(Message transaction) {
         distributorMessage.setMessage(transaction);
     }
 }
