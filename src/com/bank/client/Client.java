@@ -9,6 +9,8 @@ import com.bank.operation.BankOperation;
 public class Client {
     int bankTurn;
     BankOperation operation;
+    String email;
+    int accountID;
 
     /**
      * Constructor method of the client
@@ -25,10 +27,23 @@ public class Client {
         return bankTurn;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public int getAccountID() {
+        return accountID;
+    }
+
     /**
      * Returns the Operation performed by the client
      */
     public BankOperation getOperation() {
         return operation;
+    }
+
+    @Override
+    public String toString() {
+        return "Client " + bankTurn;
     }
 }

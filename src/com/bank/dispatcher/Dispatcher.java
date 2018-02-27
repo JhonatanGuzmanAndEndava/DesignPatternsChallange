@@ -3,8 +3,10 @@ package com.bank.dispatcher;
 import com.bank.agents.factory.Agent;
 import com.bank.agents.pool.AgentPool;
 import com.bank.client.Client;
+import com.messages.Message;
+import com.messages.ServiceMsg;
+import com.messages.TransactionMessage;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Supplier;
@@ -20,101 +22,76 @@ import java.util.function.Supplier;
  */
 public class Dispatcher {
 
+    private final int CASHIERS = 6;
+    private final int SUPERVISOR = 3;
+    private final int DIRECTOR = 1;
+
     private ExecutorService executor;
     private AgentPool pCashier;
     private AgentPool pDirector;
     private AgentPool pSupervisor;
-    private ConcurrentLinkedQueue<Client> bankLine;
+    private BankFile bankFile;
+
+    private static Dispatcher instance;
 
     /**
      * Initialize the ThreadPool, the pool of cashiers, the pool of supervisors
      * and the pool of directors
      */
-    public Dispatcher() {
+    private Dispatcher() {
         executor = Executors.newFixedThreadPool(10);
-        pCashier = new AgentPool(6, "CASHIER");
-        pDirector = new AgentPool(1, "DIRECTOR");
-        pSupervisor = new AgentPool(3, "SUPERVISOR");
+        pCashier = new AgentPool(CASHIERS, "CASHIER");
+        pSupervisor = new AgentPool(SUPERVISOR, "SUPERVISOR");
+        pDirector = new AgentPool(DIRECTOR, "DIRECTOR");
     }
 
-    /**
-     * For each client, asks for availability of the agents, if there isn't an agent available waits
-     * If there is an agent, assigns the client to the agent
-     * With a thread, the agent perform the request of the client
-     * When all the clients are attended, shuts down the ExecutorService
-     *
-     * @param bankLine is the queue which contains the clients to be attended
-     * @see #assignToCashier()
-     * @see #assignToDirector()
-     * @see #assignToSupervisor()
-     */
-    public void attend(ConcurrentLinkedQueue<Client> bankLine) {
-        this.bankLine = bankLine;
-
-        while (!bankLine.isEmpty()) {
-            if (pCashier.isAvailable()) {
-                assignToCashier();
-            } else if (pSupervisor.isAvailable()) {
-                assignToSupervisor();
-            } else if (pDirector.isAvailable()) {
-                assignToDirector();
-            }
+    public static Dispatcher getInstance() {
+        if(instance == null) {
+            instance = new Dispatcher();
         }
-        executor.shutdown();
+        return instance;
     }
 
-    /**
-     * Attends the client with the available agent
-     *
-     * Extracts an agent from the Pool
-     * Extracts a client from the queue
-     * Assigns the client to the agent
-     * Creates a supply to the ThreadPool
-     * Creates a CompletableFuture, when the tread perform its action returns a promise.
-     * The promise is the agent who attended the client.
-     * Displays a message whit the turn and the operation of the client, and with the id of the agent
-     */
-    private void assignToCashier() {
-        Agent agentInUse = pCashier.removeFromDispatcher();
-        Supplier<Agent> s1 = new SupplierOfAgents(agentInUse, bankLine.remove());
+    public void attend(Client client) {
+        if (pCashier.isAvailable()) {
+            assign(client, pCashier);
+        } else if (pSupervisor.isAvailable()) {
+            assign(client, pSupervisor);
+        } else if (pDirector.isAvailable()) {
+            assign(client, pDirector);
+        }
+    }
+
+    private void assign(Client client,AgentPool pAgent) {
+        Agent agentInUse = pAgent.removeFromDispatcher();
+        Supplier<Agent> s1 = new SupplierOfAgents(agentInUse, client);
         CompletableFuture.supplyAsync(s1, executor).thenAccept(usedAgent -> {
-            pCashier.returnObjectToPool(agentInUse);
-            /*System.out.println("Took " + usedAgent.getTime() / 1000
-                    + " seconds to attend the client with turn "
-                    + usedAgent.getClientBeingAttended().getBankTurn()
-                    + " to perform " + usedAgent.getClientBeingAttended().getOperation()
-                    + " with the agent " + usedAgent.getType() + " " + usedAgent.getId());
-                    */
+            //String s = usedAgent.getJobName()+" "+usedAgent.getAgentId()+" has attended " + client.toString();
+            //System.out.println(s);
+            Message transactionMessage = new TransactionMessage(client.getBankTurn(),client.getEmail(),usedAgent.getAgentId(),usedAgent.getJobName(),client.getAccountID(),"Transaction date",10000,client.getOperation());
+            ServiceMsg.sendMessagetransaction(transactionMessage);
+            pAgent.returnObjectToPool(usedAgent);
+            attendAnotherClient();
         });
     }
 
-    private void assignToSupervisor() {
-        Agent agentInUse = pSupervisor.removeFromDispatcher();
-        Supplier<Agent> s1 = new SupplierOfAgents(agentInUse, bankLine.remove());
-        CompletableFuture.supplyAsync(s1, executor).thenAccept(usedAgent -> {
-            pSupervisor.returnObjectToPool(agentInUse);
-            /*System.out.println("Took " + usedAgent.getTime() / 1000
-                    + " seconds to attend the client with turn "
-                    + usedAgent.getClientBeingAttended().getBankTurn()
-                    + " to perform " + usedAgent.getClientBeingAttended().getOperation()
-                    + " with the agent " + usedAgent.getType() + " " + usedAgent.getId());
-                    */
-        });
+    public void setBankFile(BankFile bankFile) {
+        this.bankFile = bankFile;
     }
 
-    private void assignToDirector() {
-        Agent agentInUse = pDirector.removeFromDispatcher();
-        Supplier<Agent> s1 = new SupplierOfAgents(agentInUse, bankLine.remove());
-        CompletableFuture.supplyAsync(s1, executor).thenAccept(usedAgent -> {
-            pDirector.returnObjectToPool(agentInUse);
-            /*System.out.println("Took " + usedAgent.getTime() / 1000
-                    + " seconds to attend the client with turn "
-                    + usedAgent.getClientBeingAttended().getBankTurn()
-                    + " to perform " + usedAgent.getClientBeingAttended().getOperation()
-                    + " with the agent " + usedAgent.getType() + " " + usedAgent.getId());
-                    */
-        });
+    public void startToAttend() {
+        if(bankFile.getNumberOfClients() < CASHIERS + SUPERVISOR + DIRECTOR)
+            bankFile.attendFirstClients(bankFile.getNumberOfClients());
+        else
+            bankFile.attendFirstClients(CASHIERS + SUPERVISOR + DIRECTOR);
     }
 
-
+    public void attendAnotherClient() {
+        if(bankFile.isClientInQueue()) {
+            executor.shutdown();
+        }
+        else {
+            bankFile.attendClient();
+        }
+    }
 }

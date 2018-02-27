@@ -1,7 +1,16 @@
 package Main;
 
+<<<<<<< HEAD
 import com.bank.client.Client;
 import com.bank.dispatcher.Dispatcher;
+=======
+import com.bank.dispatcher.AttendObserver;
+import com.bank.dispatcher.BankFile;
+import com.bank.dispatcher.Dispatcher;
+import com.bank.operation.Operation;
+import com.messages.ServiceMsg;
+import com.observer.*;
+>>>>>>> 77b6987ec747b7d2fab59dc4140931ef909e45fd
 
 import javax.swing.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -15,7 +24,7 @@ import static Main.Messages.*;
  */
 public class Main {
 
-    private static ConcurrentLinkedQueue<Client> bankLine;
+    private static BankFile bankFile;
 
     /**
      * This method sends a dialogue box with a welcome message.
@@ -28,8 +37,11 @@ public class Main {
      * @see #createLineofClients(int)
      */
     public static void main(String[] args) {
-        bankLine = new ConcurrentLinkedQueue<>();
-        Dispatcher asesor = new Dispatcher();
+
+        subscribe();
+
+        bankFile = new BankFile();
+        Dispatcher asesor = Dispatcher.getInstance();
         int numberofClients;
 
         welcome();
@@ -38,7 +50,10 @@ public class Main {
 
         createLineofClients(numberofClients);
 
-        asesor.attend(bankLine);
+        bankFile.addObserver(new AttendObserver(bankFile));
+
+        asesor.setBankFile(bankFile);
+        asesor.startToAttend();
     }
 
     /**
@@ -64,6 +79,17 @@ public class Main {
         return 0;
     }
 
+    public static void subscribe(){
+        Observer auditModule = new AuditModule();
+        Observer marketingSystem = new MarketingSystem(new MktSystemAd());
+        Subject distributor = new Distributor();
+
+        distributor.registerObserver(auditModule);
+        distributor.registerObserver(marketingSystem);
+
+        ServiceMsg.setDistributorMessage(distributor);
+    }
+
     /**
      * With the method createClient creates the number of clients specified
      * Inserts the clients created to the Queue
@@ -74,7 +100,7 @@ public class Main {
     private static void createLineofClients(int numberOfClients) {
         int clientsInLine = 0;
         for (int i = 0; i < numberOfClients; i++) {
-            bankLine.add((createClient(clientsInLine)));
+            bankFile.addClient((createClient(clientsInLine)));
             clientsInLine++;
         }
     }
