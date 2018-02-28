@@ -15,7 +15,7 @@ public class Withdrawal extends BankOperation {
     }
 
     @Override
-    protected String getOperationType() {
+    public String getOperationType() {
         return "Withdrawal";
     }
 }

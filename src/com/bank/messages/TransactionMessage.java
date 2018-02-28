@@ -1,4 +1,4 @@
-package com.messages;
+package com.bank.messages;
 import com.bank.operation.BankOperation;
 
 public class TransactionMessage implements Message{
@@ -26,5 +26,37 @@ public class TransactionMessage implements Message{
     @Override
     public String getInformation() {
         return customerID+","+customerEmail+","+agentID+","+agentType+","+accountID+","+ transactionDate +","+transactionValue+","+transactionType.type();
+    }
+
+    public int getCustomerID() {
+        return customerID;
+    }
+
+    public String getCustomerEmail() {
+        return customerEmail;
+    }
+
+    public int getAgentID() {
+        return agentID;
+    }
+
+    public String getAgentType() {
+        return agentType;
+    }
+
+    public int getAccountID() {
+        return accountID;
+    }
+
+    public String getTransactionDate() {
+        return transactionDate;
+    }
+
+    public double getTransactionValue() {
+        return transactionValue;
+    }
+
+    public BankOperation getTransactionType() {
+        return transactionType;
     }
 }

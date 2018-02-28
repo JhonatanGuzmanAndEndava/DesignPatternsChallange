@@ -1,10 +1,11 @@
-package com.observer;
+package com.bank.observable;
 
-import com.messages.Message;
+import com.bank.messages.Message;
+import com.bank.observer.Observer;
 
 import java.util.ArrayList;
 
-public class Distributor implements Subject{
+public class Distributor implements Subject {
 
     private ArrayList<Observer> observers;
     private Message transactionMessage;

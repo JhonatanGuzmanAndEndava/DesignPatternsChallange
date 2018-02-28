@@ -15,7 +15,7 @@ public class Deposit extends BankOperation {
     }
 
     @Override
-    protected String getOperationType() {
+    public String getOperationType() {
         return "Deposit";
     }
 }

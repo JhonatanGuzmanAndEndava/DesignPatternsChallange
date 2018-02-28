@@ -1,6 +1,6 @@
-package com.observer;
+package com.bank.observer.auditModule;
 
-import com.messages.Message;
+import com.bank.messages.Message;
 
 import java.util.Arrays;
 import java.util.List;

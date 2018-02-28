@@ -41,5 +41,5 @@ public abstract class BankOperation {
     }
 
     protected abstract void operationProcess();
-    protected abstract String getOperationType();
+    public abstract String getOperationType();
 }

@@ -15,7 +15,7 @@ public class CustomerIssue extends BankOperation {
     }
 
     @Override
-    protected String getOperationType() {
+    public String getOperationType() {
         return "Customer issue";
     }
 }

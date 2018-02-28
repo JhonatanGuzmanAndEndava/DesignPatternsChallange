@@ -1,6 +1,7 @@
-package com.observer;
+package com.bank.observable;
 
-import com.messages.Message;
+import com.bank.messages.Message;
+import com.bank.observer.Observer;
 
 public interface Subject {
     public void registerObserver(Observer observer);

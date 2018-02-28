@@ -1,4 +1,4 @@
-package com.messages;
+package com.bank.messages;
 
 public interface Message {
     public String getInformation();

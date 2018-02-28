@@ -1,6 +1,7 @@
-package com.observer;
+package com.bank.observer.auditModule;
 
-import com.messages.Message;
+import com.bank.messages.Message;
+import com.bank.messages.TransactionMessage;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -16,7 +17,8 @@ public class Logger {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMddyyyy");
             String format = ls.format(formatter);
 
-            String msg = transactionMessage.getInformation();
+            TransactionMessage transactioMsg = (TransactionMessage)transactionMessage;
+            String msg = transactioMsg.getCustomerID()+","+transactioMsg.getAccountID()+","+transactioMsg.getCustomerEmail();
             String nameFile = "DEPOSITSTOREVIEW" + format + ".txt";
             FileWriter fw = new FileWriter(nameFile,true);
             fw.write(msg + "\n");

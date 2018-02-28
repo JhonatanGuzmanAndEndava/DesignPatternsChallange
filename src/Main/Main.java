@@ -4,12 +4,17 @@ import com.bank.client.Client;
 import com.bank.dispatcher.Dispatcher;
 import com.bank.dispatcher.AttendObserver;
 import com.bank.dispatcher.BankFile;
+import com.bank.observable.Distributor;
+import com.bank.observable.Subject;
+import com.bank.observer.Observer;
+import com.bank.observer.auditModule.AuditModule;
+import com.bank.observer.marketingSystem.MarketingSystem;
+import com.bank.observer.marketingSystem.MktSystemAd;
 import com.bank.operation.BankOperation;
 import com.bank.operation.CustomerIssue;
 import com.bank.operation.Deposit;
 import com.bank.operation.Withdrawal;
-import com.messages.ServiceMsg;
-import com.observer.*;
+import com.bank.messages.ServiceMsg;
 
 import javax.swing.*;
 

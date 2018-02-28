@@ -1,4 +1,4 @@
-package com.observer;
+package com.bank.observer.marketingSystem;
 
 abstract class MktServiceLegacy {
 

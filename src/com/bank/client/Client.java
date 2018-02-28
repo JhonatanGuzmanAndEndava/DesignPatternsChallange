@@ -18,6 +18,7 @@ public class Client {
     public Client(int bankTurn, BankOperation operation) {
         this.bankTurn = ++bankTurn;
         this.operation = operation;
+        this.email = "client"+String.valueOf(this.bankTurn)+"@hotmail.com";
     }
 
     /**
