@@ -32,11 +32,11 @@ public abstract class BankOperation {
                 + " took: " + this.getOperationDuration()/1000 + "s";
     }
 
-    protected final LocalDateTime getOperationDate() {
+    public final LocalDateTime getOperationDate() {
         return operationDate;
     }
 
-    protected final int getOperationValue() {
+    public final int getOperationValue() {
         return operationValue;
     }
 

@@ -66,7 +66,7 @@ public class Dispatcher {
         Agent agentInUse = pAgent.removeFromDispatcher();
         Supplier<Agent> s1 = new SupplierOfAgents(agentInUse, client);
         CompletableFuture.supplyAsync(s1, executor).thenAccept(usedAgent -> {
-            Message transactionMessage = new TransactionMessage(client.getBankTurn(),client.getEmail(),usedAgent.getAgentId(),usedAgent.getJobName(),client.getAccountID(),"Transaction date",10000,client.getOperation());
+            Message transactionMessage = new TransactionMessage(client.getBankTurn(),client.getEmail(),usedAgent.getAgentId(),usedAgent.getJobName(),client.getAccountID(),client.getOperation().getOperationDate().toString(),client.getOperation().getOperationValue(),client.getOperation());
             ServiceMsg.sendMessageTransaction(transactionMessage);
             pAgent.returnObjectToPool(usedAgent);
             attendAnotherClient();

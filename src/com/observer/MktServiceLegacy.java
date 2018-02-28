@@ -3,7 +3,7 @@ package com.observer;
 abstract class MktServiceLegacy {
 
     public void updateInformation(String customerID, Double transactionValue, String email){
-        System.out.println("Check value :"+transactionValue);
+        System.out.println("Check value :" + transactionValue);
         this.sendAD(customerID,email);
     }
 

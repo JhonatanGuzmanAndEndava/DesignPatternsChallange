@@ -131,9 +131,9 @@ public class Main {
         int selection = JOptionPane.showOptionDialog(null, readOpClient + turn, "Operation", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
         switch (selection) {
             case 0:
-                return new Deposit(ThreadLocalRandom.current().nextInt(10000,1000000));
+                return new Deposit(ThreadLocalRandom.current().nextInt(1000,20000));
             case 1:
-                return new Withdrawal(-1*ThreadLocalRandom.current().nextInt(10000,1000000));
+                return new Withdrawal(-1*ThreadLocalRandom.current().nextInt(1000,20000));
             case 2:
                 return new CustomerIssue(0);
             case -1:

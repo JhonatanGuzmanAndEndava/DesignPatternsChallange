@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MarketingSystem  implements Observer {
+public class MarketingSystem implements Observer {
 
     private Message transactionMessage;
     private MktServiceLegacy mkt;
