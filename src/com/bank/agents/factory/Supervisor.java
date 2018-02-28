@@ -8,7 +8,7 @@ public class Supervisor implements Agent {
     private static final AtomicInteger supervisorIdCount = new AtomicInteger(0);
     private final int supervisorId;
 
-    public Supervisor(){
+    protected Supervisor(){
         supervisorId = supervisorIdCount.incrementAndGet();
     }
 

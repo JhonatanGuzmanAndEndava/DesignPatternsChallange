@@ -1,26 +1,22 @@
 package com.observer;
 import com.messages.Message;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class AuditModule implements Observer{
-
-    private Message transactionMessage;
+public class AuditModule extends MessageChain implements Observer{
 
     @Override
     public void update(Message transactionMessage) {
         this.transactionMessage = transactionMessage;
-        logMessage();
+        deliverMessage(this.transactionMessage);
     }
 
-    private void logMessage() {
-        List<String> messageInformation = new ArrayList<String>();
-        messageInformation = Arrays.asList(transactionMessage.getInformation().split(","));
-        double transactionValue = Double.parseDouble(messageInformation.get(6));
+    @Override
+    public void writeMessage(Message transactionMessage) {
+        List<String> messageInformation = Arrays.asList(transactionMessage.getInformation().split(","));
         String transactionType = messageInformation.get(7);
-        if(transactionValue >= 10000 && transactionType.equalsIgnoreCase("Deposit"))
-            Logger.writeLog(this.transactionMessage);
+        if(transactionType.equalsIgnoreCase("Deposit"))
+            Logger.writeLog(transactionMessage);
     }
 }

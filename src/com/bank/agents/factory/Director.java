@@ -8,7 +8,7 @@ public class Director implements Agent {
     private static final AtomicInteger directorIdCount = new AtomicInteger(0);
     private final int directorId;
 
-    public Director(){
+    protected Director(){
         directorId = directorIdCount.incrementAndGet();
     }
 

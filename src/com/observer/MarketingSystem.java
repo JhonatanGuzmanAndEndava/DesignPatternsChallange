@@ -21,9 +21,7 @@ public class MarketingSystem implements Observer {
     }
 
     public void adapter(){
-        List<String> messageInformation = new ArrayList<String>();
-        messageInformation = Arrays.asList(transactionMessage.getInformation().split(","));
-
+        List<String> messageInformation = Arrays.asList(transactionMessage.getInformation().split(","));
         String customerID = messageInformation.get(0);
         double transactionValue = Double.parseDouble(messageInformation.get(6));
         String email = messageInformation.get(1);

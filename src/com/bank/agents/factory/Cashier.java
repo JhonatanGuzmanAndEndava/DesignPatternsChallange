@@ -8,7 +8,7 @@ public class Cashier implements Agent {
     private static final AtomicInteger cashierIdCount = new AtomicInteger(0);
     private final int cashierId;
 
-    public Cashier(){
+    protected Cashier(){
         cashierId = cashierIdCount.incrementAndGet();
     }
 
