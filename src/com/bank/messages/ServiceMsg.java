@@ -1,6 +1,6 @@
 package com.bank.messages;
 
-import com.bank.observable.Subject;
+import com.bank.subject.Subject;
 
 public class ServiceMsg {
 

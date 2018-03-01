@@ -1,4 +1,4 @@
-package com.bank.observable;
+package com.bank.subject;
 
 import com.bank.messages.Message;
 import com.bank.observer.Observer;

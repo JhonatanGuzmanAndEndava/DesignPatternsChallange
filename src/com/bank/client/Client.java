@@ -2,6 +2,8 @@ package com.bank.client;
 
 import com.bank.operation.BankOperation;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 /**
  * Class to be attended by the bank
  * Has a turn and the operation given by the user
@@ -19,6 +21,7 @@ public class Client {
         this.bankTurn = ++bankTurn;
         this.operation = operation;
         this.email = "client"+String.valueOf(this.bankTurn)+"@hotmail.com";
+        this.accountID = ThreadLocalRandom.current().nextInt(1,10000);
     }
 
     /**
