@@ -19,6 +19,6 @@ public class AgentFactory {
             else if(agentType.equalsIgnoreCase("DIRECTOR"))
                 return new Director();
         }
-        return null;
+        throw new IllegalStateException();
     }
 }
