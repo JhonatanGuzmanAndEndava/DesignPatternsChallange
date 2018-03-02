@@ -10,15 +10,15 @@ import java.time.format.DateTimeFormatter;
 
 public class Logger {
 
-    public static void writeLog(Message transactionMessage) {
+    public static void writeLog(Message transactionMessage, String regExpDate) {
         try {
 
             LocalDateTime ls = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMddyyyy");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(regExpDate);
             String format = ls.format(formatter);
 
-            TransactionMessage transactioMsg = (TransactionMessage)transactionMessage;
-            String msg = transactioMsg.getCustomerID()+","+transactioMsg.getAccountID()+","+transactioMsg.getCustomerEmail();
+            TransactionMessage transactionMsg = (TransactionMessage)transactionMessage;
+            String msg = transactionMsg.getCustomerID()+","+transactionMsg.getAccountID()+","+transactionMsg.getCustomerEmail();
             String nameFile = "DEPOSITSTOREVIEW" + format + ".txt";
             FileWriter fw = new FileWriter(nameFile,true);
             fw.write(msg + "\n");

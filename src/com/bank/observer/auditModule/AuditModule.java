@@ -16,6 +16,6 @@ public class AuditModule extends MessageChain implements Observer {
         TransactionMessage transactionMsg = (TransactionMessage)transactionMessage;
         String transactionType = transactionMsg.getTransactionType().getOperationType();
         if(transactionType.equalsIgnoreCase("Deposit"))
-            Logger.writeLog(transactionMessage);
+            Logger.writeLog(transactionMessage, FormatDateRegExp.MMDDYYYY);
     }
 }
