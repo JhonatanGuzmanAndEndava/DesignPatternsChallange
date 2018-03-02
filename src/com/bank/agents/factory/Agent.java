@@ -9,5 +9,5 @@ public interface Agent {
 
     int getAgentId();
 
-    Message attend(Client client);
+    String attend(Client client);
 }

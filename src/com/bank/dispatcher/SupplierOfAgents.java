@@ -33,7 +33,7 @@ public class SupplierOfAgents implements Supplier<Agent> {
      * Assigns to the Agent the attention time
      */
     public Agent get() {
-        Logger.writeLog(busyAgent.attend(client), FormatDateRegExp.MMDDYYYY);
+        java.util.logging.Logger.getAnonymousLogger().info(busyAgent.attend(client));
         return busyAgent;
     }
 
