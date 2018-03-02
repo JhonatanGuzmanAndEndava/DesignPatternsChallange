@@ -26,6 +26,7 @@ public class Cashier implements Agent {
 
     @Override
     public Message attend(Client client) {
+        client.getOperation().performOperation();
         return new TransactionMessage(client.getBankTurn(), client.getEmail(), this.getAgentId(), this.getJobName(),
                 client.getAccountID(), client.getOperation().getOperationDate().toString(), client.getOperation().getOperationValue(),
                 client.getOperation());
