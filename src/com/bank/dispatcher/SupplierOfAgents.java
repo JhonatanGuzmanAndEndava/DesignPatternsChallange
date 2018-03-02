@@ -2,6 +2,8 @@ package com.bank.dispatcher;
 
 import com.bank.client.Client;
 import com.bank.agents.factory.Agent;
+import com.bank.observer.auditModule.FormatDateRegExp;
+import com.bank.observer.auditModule.Logger;
 
 import java.util.function.Supplier;
 
@@ -31,7 +33,7 @@ public class SupplierOfAgents implements Supplier<Agent> {
      * Assigns to the Agent the attention time
      */
     public Agent get() {
-        System.out.println(busyAgent.attend(client));
+        Logger.writeLog(busyAgent.attend(client), FormatDateRegExp.MMDDYYYY);
         return busyAgent;
     }
 
